@@ -80,6 +80,122 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
 .si-sub{font-size:13px;color:#6b7280;max-width:360px;margin:0 auto 18px;line-height:1.7;}
 .btn-dl{display:inline-flex;align-items:center;gap:7px;padding:10px 24px;background:var(--navy);color:#fff;border:none;border-radius:5px;font-family:'DM Sans';font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;}
 .btn-dl:hover{background:#1a3260;}
+
+.required-note{background:#fff9e8;border:1px solid #e8c96e;border-radius:7px;padding:9px 13px;margin-bottom:12px;color:#0d1f3c;font-size:12px;line-height:1.45;}
+.required-note b{color:#0d1f3c;}
+.sig-text-row{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap;}
+.sig-text-label{font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:.35px;}
+.sig-text-input{height:24px;min-width:220px;flex:1;border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-family:'DM Sans';font-size:12px;color:#0a1830;outline:none;background:#fff;}
+.sig-text-input:focus{border-color:var(--teal);}
+.sig-text-input.err{border-color:var(--err);background:rgba(255,220,220,.55);}
+.yn-si.err,.yn-no.err,.choice-opt.err{outline:1.5px solid var(--err);background:rgba(255,220,220,.5);}
+
+
+.f.err:focus,.sig-text-input.err:focus{
+  border-color:var(--err)!important;
+  background:rgba(255,220,220,.75)!important;
+  box-shadow:0 0 0 2px rgba(168,35,35,.18)!important;
+}
+.yn-si.err,.yn-no.err,.choice-opt.err{
+  outline:2px solid var(--err)!important;
+  background:rgba(255,220,220,.65)!important;
+}
+
+/* Refuerzo real de errores para página 3 */
+.yn-si.err,.yn-no.err,.choice-opt.err{
+  border:2px solid var(--err)!important;
+  outline:none!important;
+  background:rgba(255,220,220,.75)!important;
+  color:#8a1f1f!important;
+  box-sizing:border-box!important;
+}
+.f.err{
+  border-bottom:2px solid var(--err)!important;
+  background:rgba(255,220,220,.75)!important;
+}
+.f.err:focus{
+  border-bottom:2px solid var(--err)!important;
+  background:rgba(255,220,220,.75)!important;
+  box-shadow:0 0 0 2px rgba(168,35,35,.18)!important;
+}
+
+
+/* Error pendiente: cuadrito rojo vacío, sin visto */
+.yn-si.err:not(.sel),
+.yn-no.err:not(.sel),
+.choice-opt.err:not(.sel){
+  border:2px solid var(--err)!important;
+  outline:none!important;
+  background:rgba(255,220,220,.45)!important;
+  color:transparent!important;
+  box-sizing:border-box!important;
+}
+
+/* Error ya seleccionado: mantener visto visible */
+.yn-si.err.sel,
+.yn-no.err.sel,
+.choice-opt.err.sel{
+  border:2px solid var(--err)!important;
+  outline:none!important;
+  background:rgba(255,220,220,.65)!important;
+  color:#1a7a42!important;
+  box-sizing:border-box!important;
+}
+
+/* Inputs obligatorios pendientes */
+.f.err,
+.f.err:focus,
+.sig-text-input.err,
+.sig-text-input.err:focus{
+  border-bottom:2px solid var(--err)!important;
+  background:rgba(255,220,220,.75)!important;
+  box-shadow:0 0 0 2px rgba(168,35,35,.18)!important;
+}
+
+
+/* FINAL: checks pendientes en error deben quedar vacíos */
+.yn-si.err:not(.sel),
+.yn-no.err:not(.sel),
+.choice-opt.err:not(.sel){
+  border:2px solid var(--err)!important;
+  outline:none!important;
+  background:rgba(255,220,220,.45)!important;
+  color:transparent!important;
+  text-shadow:none!important;
+  box-sizing:border-box!important;
+}
+.yn-si.err.sel,
+.yn-no.err.sel,
+.choice-opt.err.sel{
+  border:2px solid var(--err)!important;
+  outline:none!important;
+  background:rgba(255,220,220,.65)!important;
+  color:#1a7a42!important;
+  box-sizing:border-box!important;
+}
+.f.err,
+.f.err:focus{
+  border-bottom:2px solid var(--err)!important;
+  background:rgba(255,220,220,.75)!important;
+  box-shadow:0 0 0 2px rgba(168,35,35,.18)!important;
+}
+
+
+/* Campo visible det_hernia_extra: requerido en página 3 */
+#det_hernia_extra.err,
+#det_hernia_extra.err:focus{
+  border-bottom:2px solid var(--err)!important;
+  background:rgba(255,220,220,.75)!important;
+  box-shadow:0 0 0 2px rgba(168,35,35,.18)!important;
+}
+
+
+/* Campo condicional de página 4 */
+.f:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
 </style>
 </head>
 <body>
@@ -95,6 +211,9 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
   <div class="prog-lbl">Página <span class="prog-cur" id="plbl">1</span> de 4</div>
 </div>
 <div class="wrap">
+<div class="required-note" id="required-note">
+  <b>Importante:</b> todos los campos del formulario son obligatorios. En los campos de detalle, si una pregunta o información no aplica, escriba <b>No aplica</b>.
+</div>
 <div class="valbox" id="valbox"><b style="font-size:11px;color:var(--err);">⚠ Complete los campos requeridos:</b><ul id="vallist"></ul></div>
 
 <!-- ══ PÁGINA 1 ══ -->
@@ -117,9 +236,9 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
         style="left:88.9%;top:17.8%;width:7.5%;height:2.1%;text-align:center;"/>
       <!-- MEDICO CONSULTADO: two rows y=23.0% and 25.5% -->
       <input class="f" id="med_cons" placeholder="Nombre y dirección del médico consultado"
-        style="left:3.6%;top:22.1%;width:92.8%;height:2.1%;"/>
+        style="left:3.6%;top:22.1%;width:92.8%;height:2.1%;" data-label="Nombre y dirección del último médico consultado"/>
       <input class="f" id="med_cons2" placeholder=""
-        style="left:3.6%;top:24.6%;width:92.8%;height:2.1%;"/>
+        style="left:3.6%;top:24.6%;width:92.8%;height:2.1%;" data-optional-if="med_cons" data-label="Nombre y dirección del último médico consultado, línea 2"/>
       <!-- FECHA CONSULTA: y=29.5% — DD x=3.6% MM x=12.2% AAAA x=20.7% RAZ x=31.3% -->
       <input class="f" id="fc_dd" placeholder="DD" maxlength="2"
         style="left:3.6%;top:28.6%;width:7.5%;height:2.1%;text-align:center;"/>
@@ -134,9 +253,9 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
         style="left:3.6%;top:32.8%;width:92.8%;height:2.1%;"/>
       <!-- MEDICO PERSONAL: y=37.9% y=40.4% -->
       <input class="f" id="med_pers" placeholder="Nombre y dirección médico personal (o 'No tiene')"
-        style="left:3.6%;top:37%;width:92.8%;height:2.1%;"/>
+        style="left:3.6%;top:37%;width:92.8%;height:2.1%;" data-label="Nombre y dirección de su médico personal"/>
       <input class="f" id="med_pers2" placeholder=""
-        style="left:3.6%;top:39.5%;width:92.8%;height:2.1%;"/>
+        style="left:3.6%;top:39.5%;width:92.8%;height:2.1%;" data-optional-if="med_pers" data-label="Nombre y dirección de su médico personal, línea 2"/>
 
       <!-- SI/NO items a-j: Si col x=54.2% No col x=57.2% Det x=61.8%-96.4% -->
       <!-- item a: y=56.3% -->
@@ -238,7 +357,11 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
       <div class="sig-ctrl">
         <button class="sig-clear" onclick="clearSig('med_p2')">✕ Borrar</button>
         <button type="button" class="sig-upload" onclick="openSigImagePicker('med_p2')">↥ Cargar firma</button>
-        <div class="sig-status"><div class="sig-dot" id="dot_med_p2"></div><span id="st_med_p2">Sin firmar</span></div>
+        <div class="sig-status"><div class="sig-dot" id="dot_med_p2"></div>
+      <div class="sig-text-row">
+        <label class="sig-text-label" for="med_unico_p2">Identificador único del médico *</label>
+        <input class="sig-text-input" id="med_unico_p2" placeholder="Identificador único del médico"/>
+      </div><span id="st_med_p2">Sin firmar</span></div>
       </div>
       <div class="sig-help" id="sig_help_med_p2">Puede firmar dibujando un boceto de la firma directamente en el recuadro gris de arriba, o cargar una imagen con su firma usando “Cargar firma”.</div>
       <span class="errmsg" id="e_sig_med">Firma requerida</span>
@@ -297,9 +420,9 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
       <input class="f" id="det_disnea" style="left:62.20%;top:40.30%;width:34.00%;height:2.00%;" placeholder="Detalle..."/>
 
       <!-- DISNEA: si es afirmativo marcar una sola opción -->
-      <div class="choice-opt" id="opt_disnea_reposo" onclick="setChoice('disnea_tipo','reposo')" style="left:6.65%;top:47.95%;width:1.90%;height:1.55%;" title="Reposo">✓</div>
-      <div class="choice-opt" id="opt_disnea_esfuerzo" onclick="setChoice('disnea_tipo','esfuerzo')" style="left:17.85%;top:47.95%;width:1.90%;height:1.55%;" title="Esfuerzo">✓</div>
-      <div class="choice-opt" id="opt_disnea_siempre" onclick="setChoice('disnea_tipo','siempre')" style="left:29.45%;top:47.95%;width:1.90%;height:1.55%;" title="Siempre">✓</div>
+      <div class="choice-opt" id="opt_disnea_reposo" data-choice-group="disnea_tipo" data-choice-value="reposo" onclick="setChoice('disnea_tipo','reposo')" style="left:6.65%;top:47.95%;width:1.90%;height:1.55%;" title="Reposo">✓</div>
+      <div class="choice-opt" id="opt_disnea_esfuerzo" data-choice-group="disnea_tipo" data-choice-value="esfuerzo" onclick="setChoice('disnea_tipo','esfuerzo')" style="left:17.85%;top:47.95%;width:1.90%;height:1.55%;" title="Esfuerzo">✓</div>
+      <div class="choice-opt" id="opt_disnea_siempre" data-choice-group="disnea_tipo" data-choice-value="siempre" onclick="setChoice('disnea_tipo','siempre')" style="left:29.45%;top:47.95%;width:1.90%;height:1.55%;" title="Siempre">✓</div>
 
       <!-- EDEMA -->
       <div class="yn-si" id="yn_edema_si" onclick="setYN('yn','edema','Si')" style="left:53.90%;top:49.75%;width:2.10%;height:1.60%;" title="Sí">✓</div>
@@ -313,7 +436,7 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
       <input class="f" id="grado_edema" style="left:30.75%;top:54.45%;width:4.75%;height:1.95%;" placeholder=""/>
       <input class="f" id="det_p3_extra_1" style="left:62.20%;top:47.90%;width:34.00%;height:2.00%;" placeholder="Detalle..."/>
       <input class="f" id="det_p3_extra_2" style="left:62.20%;top:50.40%;width:34.00%;height:2.00%;" placeholder="Detalle..."/>
-      <input class="f" id="det_p3_extra_3" style="left:62.20%;top:52.90%;width:34.00%;height:2.00%;" placeholder="Detalle..."/>
+      <input class="f" id="det_p3_extra_3" style="left:62.20%;top:52.90%;width:34.00%;height:2.00%;" placeholder="Detalle..." data-label="Detalle adicional 3"/>
 
       <!-- ANOMALÍAS: a-h -->
       <div class="yn-si" id="yn3_a_si" onclick="setYN('yn3','a','Si')" style="left:53.90%;top:63.65%;width:2.10%;height:1.60%;" title="Sí">✓</div>
@@ -344,11 +467,11 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
       <!-- HERNIAS -->
       <div class="yn-si" id="yn_hernia_si" onclick="setYN('yn','hernia','Si')" style="left:53.90%;top:81.35%;width:2.10%;height:1.60%;" title="Sí">✓</div>
       <div class="yn-no" id="yn_hernia_no" onclick="setYN('yn','hernia','No')" style="left:57.15%;top:81.35%;width:2.10%;height:1.60%;" title="No">✓</div>
-      <input class="f" id="det_hernia" style="left:62.20%;top:80.50%;width:34.00%;height:2.00%;" placeholder="Detalle..."/>
-      <input class="f" id="det_hernia_extra" style="left:62.20%;top:55.20%;width:34.00%;height:2.00%;" placeholder="Detalle..."/>
+      <input class="f" id="det_hernia" style="left:62.20%;top:80.50%;width:34.00%;height:2.00%;" placeholder="Detalle..." data-label="Detalle de hernias"/>
+      <input class="f" id="det_hernia_extra" style="left:62.20%;top:55.20%;width:34.00%;height:2.00%;" placeholder="Detalle..." data-label="Detalle adicional antes de anomalías"/>
     </div>
   </div>
-  <div class="nav"><button class="btn-back" onclick="goPage(2)">← Anterior</button><button class="btn-next" onclick="goPage(4)">Siguiente: Página 4 →</button></div>
+  <div class="nav"><button class="btn-back" onclick="goPage(2)">← Anterior</button><button class="btn-next" onclick="if(validatePage3Strict()) goPage(4)">Siguiente: Página 4 →</button></div>
 </div>
 
 <!-- ══ PÁGINA 4 ══ -->
@@ -369,12 +492,12 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
       <div class="choice-opt p4-consultorio-box" id="opt_p4_lugar_consultorio" data-choice-group="p4_lugar" data-choice-value="consultorio" onclick="setChoice('p4_lugar','consultorio')" style="left:4.55%;top:19.20%;width:1.75%;height:1.45%;z-index:8;background:rgba(229,229,229,0.82);border-radius:3px;" title="Mi consultorio">✓</div>
       <div class="choice-opt" id="opt_p4_lugar_residencia" data-choice-group="p4_lugar" data-choice-value="residencia" onclick="setChoice('p4_lugar','residencia')" style="left:21.05%;top:19.20%;width:1.75%;height:1.45%;z-index:8;" title="Residencia del asegurado propuesto">✓</div>
       <div class="choice-opt" id="opt_p4_lugar_otro" data-choice-group="p4_lugar" data-choice-value="otro" onclick="setChoice('p4_lugar','otro')" style="left:55.05%;top:19.20%;width:1.75%;height:1.45%;z-index:8;" title="Otro lugar">✓</div>
-      <input class="f" id="lugar_otro" style="left:65.35%;top:18.85%;width:31.1%;height:2.1%;" placeholder="Especifique..."/>
+      <input class="f" id="lugar_otro" style="left:65.35%;top:18.85%;width:31.1%;height:2.1%;" placeholder="Especifique..." data-conditional-required="p4_lugar:otro" data-label="Especifique otro lugar"/>
 
       <!-- Datos del examinador -->
       <input class="f" id="med_nom" style="left:3.55%;top:23.05%;width:92.9%;height:2.15%;" placeholder="Nombre del examinador médico"/>
-      <input class="f" id="med_dir1" style="left:3.55%;top:27.20%;width:92.9%;height:2.15%;" placeholder="Dirección del examinador médico"/>
-      <input class="f" id="med_dir2" style="left:3.55%;top:29.80%;width:92.9%;height:2.15%;" placeholder=""/>
+      <input class="f" id="med_dir1" style="left:3.55%;top:27.20%;width:92.9%;height:2.15%;" placeholder="Dirección del examinador médico" data-label="Dirección del examinador médico"/>
+      <input class="f" id="med_dir2" style="left:3.55%;top:29.80%;width:92.9%;height:2.15%;" placeholder="" data-optional-if="med_dir1" data-label="Dirección del examinador médico, línea 2"/>
       <input class="f" id="med_id" style="left:3.55%;top:34.10%;width:92.9%;height:2.15%;" placeholder="Número de seguro social o identificación fiscal"/>
 
       <!-- Aprobación: Sí / No -->
@@ -395,7 +518,11 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
       <div class="sig-ctrl">
         <button class="sig-clear" onclick="clearSig('med_p4')">✕ Borrar</button>
         <button type="button" class="sig-upload" onclick="openSigImagePicker('med_p4')">↥ Cargar firma</button>
-        <div class="sig-status"><div class="sig-dot" id="dot_med_p4"></div><span id="st_med_p4">Sin firmar</span></div>
+        <div class="sig-status"><div class="sig-dot" id="dot_med_p4"></div>
+      <div class="sig-text-row">
+        <label class="sig-text-label" for="med_unico_p4">Identificador único del médico *</label>
+        <input class="sig-text-input" id="med_unico_p4" placeholder="Identificador único del médico"/>
+      </div><span id="st_med_p4">Sin firmar</span></div>
       </div>
       <div class="sig-help" id="sig_help_med_p4">Puede firmar dibujando un boceto de la firma directamente en el recuadro gris de arriba, o cargar una imagen con su firma usando “Cargar firma”.</div>
       <span class="errmsg" id="e_sig_med_p4">Firma requerida</span>
@@ -430,7 +557,21 @@ body{font-family:'DM Sans',sans-serif;background:#ddd9ce;font-size:13px;}
 </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+document.addEventListener('input', function(e){
+  if(e.target && e.target.classList && e.target.classList.contains('err')){
+    if(String(e.target.value || '').trim()){
+      e.target.classList.remove('err');
+    }
+  }
+});
+
+
+document.addEventListener('DOMContentLoaded', function(){
+  updateP4LugarOtro();
+});
+
+</script>
 <script>
 const sigSigned = {};
 const sigImages = {};
@@ -557,7 +698,7 @@ function syncSigs() {
 
 function goPage(n) {
   if(n>curPage && !validatePage(curPage)) return;
-  if(n===4) syncSigs();
+  if(n===4) { syncSigs(); setTimeout(updateP4LugarOtro, 50); }
   document.getElementById('pg'+curPage).classList.remove('on');
   curPage=n;
   document.getElementById('pg'+n).classList.add('on');
@@ -578,40 +719,230 @@ function goPage(n) {
   }
 }
 
+
+function validatePage3Strict() {
+  let ok = true;
+  const missing = [];
+
+  function reqInput(id, label) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.dataset && el.dataset.skipRequired === 'true') return;
+    const empty = !String(el.value || '').trim();
+    el.classList.toggle('err', empty);
+    if (empty) {
+      ok = false;
+      missing.push(label || id);
+    }
+  }
+
+  function reqYN(prefix, key, label) {
+    const groupKey = prefix + '_' + key;
+    const si = document.getElementById(groupKey + '_si');
+    const no = document.getElementById(groupKey + '_no');
+    const selected = !!_yn[groupKey] ||
+      (si && si.classList.contains('sel')) ||
+      (no && no.classList.contains('sel'));
+    [si, no].forEach(el => { if (el) el.classList.toggle('err', !selected); });
+    if (!selected) {
+      ok = false;
+      missing.push(label || groupKey);
+    }
+  }
+
+  function reqChoice(group, ids, label) {
+    const opts = ids.map(id => document.getElementById(id)).filter(Boolean);
+    const selected = !!_choice[group] || opts.some(el => el.classList.contains('sel'));
+    opts.forEach(el => el.classList.toggle('err', !selected));
+    if (!selected) {
+      ok = false;
+      missing.push(label || group);
+    }
+  }
+
+  [
+    ['est_m','Estatura metros'],
+    ['est_cm','Estatura centímetros'],
+    ['peso','Peso'],
+    ['pecho_i','Pecho inspiración'],
+    ['pecho_e','Pecho expiración'],
+    ['abdomen','Abdomen'],
+    ['pul_r','Pulso en reposo'],
+    ['pul_e','Pulso después de ejercicios'],
+    ['pul_3','Pulso 3 minutos más tarde'],
+    ['sis1','Presión arterial sistólica 1'],
+    ['sis2','Presión arterial sistólica 2'],
+    ['sis3','Presión arterial sistólica 3'],
+    ['dia1','Presión arterial diastólica 1'],
+    ['dia2','Presión arterial diastólica 2'],
+    ['dia3','Presión arterial diastólica 3'],
+    ['det_hta','Detalle hipertensión'],
+    ['det_soplo','Detalle soplo'],
+    ['det_disnea','Detalle disnea'],
+    ['det_edema_mi','Detalle edema miembros inferiores'],
+    ['det_edema_gen','Detalle edema generalizado'],
+    ['grado_edema','Grado de edema'],
+    ['det_p3_extra_1','Detalle adicional 1'],
+    ['det_p3_extra_2','Detalle adicional 2'],
+    ['det_p3_extra_3','Detalle adicional 3'],
+    ['det_hernia_extra','Detalle adicional antes de anomalías'],
+    ['det3_a','Detalle anomalía a'],
+    ['det3_b','Detalle anomalía b'],
+    ['det3_c','Detalle anomalía c'],
+    ['det3_d','Detalle anomalía d'],
+    ['det3_e','Detalle anomalía e'],
+    ['det3_f','Detalle anomalía f'],
+    ['det3_g','Detalle anomalía g'],
+    ['det3_h','Detalle anomalía h'],
+    ['det_hernia','Detalle de hernias']
+  ].forEach(([id,label]) => reqInput(id,label));
+
+  ['hta','soplo','disnea','edema','edema_mi','edema_gen'].forEach(key => reqYN('yn', key, 'Sí/No ' + key));
+  reqChoice('disnea_tipo', ['opt_disnea_reposo','opt_disnea_esfuerzo','opt_disnea_siempre'], 'Reposo / Esfuerzo / Siempre');
+  ['a','b','c','d','e','f','g','h'].forEach(key => reqYN('yn3', key, 'Sí/No anomalía ' + key));
+  reqYN('yn', 'hernia', 'Sí/No Hay hernias');
+
+  refreshCheckVisuals();
+
+  if (!ok) {
+    const vb = document.getElementById('valbox');
+    const vl = document.getElementById('vallist');
+    if (vl) {
+      const unique = [...new Set(missing)].slice(0, 35);
+      const extra = missing.length > 35 ? `<li>...y ${missing.length - 35} campo(s) adicional(es).</li>` : '';
+      vl.innerHTML = unique.map(e => `<li>${e}</li>`).join('') + extra;
+    }
+    if (vb) vb.classList.add('on');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  return ok;
+}
+
 function validatePage(p) {
   let ok = true, errs = [];
   const vb = document.getElementById('valbox');
   const vl = document.getElementById('vallist');
+  const page = document.getElementById('pg' + p);
 
-  function chk(id, lbl) {
+  function labelFor(el) {
+    if (!el) return 'Campo requerido';
+    const explicit = el.getAttribute('data-label');
+    if (explicit) return explicit;
+    const ph = el.getAttribute('placeholder');
+    if (ph) return ph.replace(/\.\.\.$/, '').replace(/\.\.$/, '');
+    const id = el.id || 'campo';
+    return id.replace(/_/g, ' ');
+  }
+
+  function isVisible(el) {
+    if (!el) return false;
+    const style = window.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    const rect = el.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function hasValue(id) {
     const el = document.getElementById(id);
-    if (!el || !String(el.value || '').trim()) {
+    return !!(el && String(el.value || '').trim());
+  }
+
+  function mark(el, bad) {
+    if (!el) return;
+    el.classList.toggle('err', !!bad);
+  }
+
+  function chkEl(el) {
+    if (!el || el.disabled) return;
+    const type = (el.type || '').toLowerCase();
+    if (['hidden','file','button','submit','reset'].includes(type)) return;
+    if (!isVisible(el)) return;
+
+    if (el.dataset && el.dataset.skipRequired === 'true') {
+      mark(el, false);
+      return;
+    }
+
+    if (el.dataset && el.dataset.optionalIf && hasValue(el.dataset.optionalIf)) {
+      mark(el, false);
+      return;
+    }
+
+    if (el.dataset && el.dataset.conditionalRequired) {
+      const parts = el.dataset.conditionalRequired.split(':');
+      const group = parts[0];
+      const requiredValue = parts[1];
+      const applies = getChoice(group) === requiredValue;
+      if (!applies) {
+        mark(el, false);
+        return;
+      }
+    }
+
+    const val = String(el.value || '').trim();
+    if (!val) {
       ok = false;
-      errs.push(lbl);
-      if (el) el.classList.add('err');
-    } else if (el) {
-      el.classList.remove('err');
+      errs.push(labelFor(el));
+      mark(el, true);
+    } else {
+      mark(el, false);
     }
   }
 
   function chkSig(sigId, errId, lbl) {
     const err = document.getElementById(errId);
     const signed = !!sigSigned[sigId];
-
     if (!signed) {
       ok = false;
       errs.push(lbl);
       if (err) err.classList.add('on');
-    } else {
-      if (err) err.classList.remove('on');
+    } else if (err) {
+      err.classList.remove('on');
     }
   }
 
-  if (p === 1) {
-    chk('nombre', 'Nombre del asegurado');
-    chk('razon', 'Razón última consulta');
-    chk('tratamiento', 'Tratamiento/medicinas');
-    chk('med_pers', 'Médico personal');
+  function chkYnGroups() {
+    const groups = new Map();
+    page.querySelectorAll('.yn-si[id], .yn-no[id]').forEach(el => {
+      const m = el.id.match(/^yn_(.+)_(si|no)$/);
+      if (!m) return;
+      const groupKey = 'yn_' + m[1];
+      if (!groups.has(groupKey)) groups.set(groupKey, []);
+      groups.get(groupKey).push(el);
+    });
+
+    groups.forEach((els, groupKey) => {
+      const selected = !!_yn[groupKey];
+      els.forEach(el => el.classList.toggle('err', !selected));
+      if (!selected) {
+        ok = false;
+        errs.push('Seleccione Sí o No en: ' + groupKey.replace(/^yn_/, '').replace(/_/g, ' '));
+      }
+    });
+  }
+
+  function chkChoiceGroups() {
+    const groups = new Map();
+    page.querySelectorAll('.choice-opt[data-choice-group]').forEach(el => {
+      const groupKey = el.dataset.choiceGroup;
+      if (!groups.has(groupKey)) groups.set(groupKey, []);
+      groups.get(groupKey).push(el);
+    });
+
+    groups.forEach((els, groupKey) => {
+      const selected = !!_choice[groupKey] || els.some(el => el.classList.contains('sel'));
+      els.forEach(el => el.classList.toggle('err', !selected));
+      if (!selected) {
+        ok = false;
+        errs.push('Seleccione una opción en: ' + groupKey.replace(/_/g, ' '));
+      }
+    });
+  }
+
+  if (page) {
+    page.querySelectorAll('input, textarea, select').forEach(chkEl);
+    chkYnGroups();
+    chkChoiceGroups();
   }
 
   if (p === 2) {
@@ -619,23 +950,135 @@ function validatePage(p) {
     chkSig('ase_p2', 'e_sig_ase', 'Firma del asegurado propuesto — página 2');
   }
 
-  if (p === 4) {
-    chk('med_nom', 'Nombre del examinador');
-    chk('med_id', 'ID fiscal');
-    chk('med_dir1', 'Dirección examinador');
-    chk('agente', 'Nombre del agente');
+  // Validaciones explícitas de página 3.
+  // Usa los IDs reales: yn3_a_si / yn3_a_no y det_p3_extra_3.
+  if (p === 3) {
+    function requireInputP3(id, lbl) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.dataset && el.dataset.skipRequired === 'true') {
+        el.classList.remove('err');
+        return;
+      }
+      const filled = !!String(el.value || '').trim();
+      el.classList.toggle('err', !filled);
+      if (!filled) {
+        ok = false;
+        errs.push(lbl || labelFor(el));
+      }
+    }
 
-    // Validación obligatoria de firmas de página 4
+    function requireYNP3(prefix, key, lbl) {
+      const groupKey = prefix + '_' + key;
+      const si = document.getElementById(groupKey + '_si');
+      const no = document.getElementById(groupKey + '_no');
+      const selected = !!_yn[groupKey] ||
+        (si && si.classList.contains('sel')) ||
+        (no && no.classList.contains('sel'));
+
+      [si, no].forEach(el => {
+        if (!el) return;
+        el.classList.toggle('err', !selected);
+      });
+
+      if (!selected) {
+        ok = false;
+        errs.push(lbl || ('Seleccione Sí o No en: ' + key));
+      }
+    }
+
+    function requireChoiceP3(group, ids, lbl) {
+      const opts = ids.map(id => document.getElementById(id)).filter(Boolean);
+      const selected = !!_choice[group] || opts.some(el => el.classList.contains('sel'));
+      opts.forEach(el => el.classList.toggle('err', !selected));
+      if (!selected) {
+        ok = false;
+        errs.push(lbl);
+      }
+    }
+
+    [
+      ['est_m','Estatura metros'],
+      ['est_cm','Estatura centímetros'],
+      ['peso','Peso'],
+      ['pecho_i','Pecho inspiración'],
+      ['pecho_e','Pecho expiración'],
+      ['abdomen','Abdomen'],
+      ['pul_r','Pulso en reposo'],
+      ['pul_e','Pulso después de ejercicios'],
+      ['pul_3','Pulso 3 minutos más tarde'],
+      ['sis1','Presión arterial sistólica 1'],
+      ['sis2','Presión arterial sistólica 2'],
+      ['sis3','Presión arterial sistólica 3'],
+      ['dia1','Presión arterial diastólica 1'],
+      ['dia2','Presión arterial diastólica 2'],
+      ['dia3','Presión arterial diastólica 3'],
+      ['det_hta','Detalle hipertensión'],
+      ['det_soplo','Detalle soplo'],
+      ['det_disnea','Detalle disnea'],
+      ['det_edema_mi','Detalle edema miembros inferiores'],
+      ['det_edema_gen','Detalle edema generalizado'],
+      ['grado_edema','Grado de edema'],
+      ['det_p3_extra_1','Detalle adicional 1'],
+      ['det_p3_extra_2','Detalle adicional 2'],
+      ['det_p3_extra_3','Detalle adicional 3'],
+      ['det_hernia_extra','Detalle adicional antes de anomalías'],
+      ['det3_a','Detalle anomalía a'],
+      ['det3_b','Detalle anomalía b'],
+      ['det3_c','Detalle anomalía c'],
+      ['det3_d','Detalle anomalía d'],
+      ['det3_e','Detalle anomalía e'],
+      ['det3_f','Detalle anomalía f'],
+      ['det3_g','Detalle anomalía g'],
+      ['det3_h','Detalle anomalía h'],
+      ['det_hernia','Detalle de hernias']
+    ].forEach(([id,lbl]) => requireInputP3(id,lbl));
+
+    ['hta','soplo','disnea','edema','edema_mi','edema_gen'].forEach(key => {
+      requireYNP3('yn', key, 'Seleccione Sí o No en: ' + key.replace(/_/g, ' '));
+    });
+
+    requireChoiceP3(
+      'disnea_tipo',
+      ['opt_disnea_reposo','opt_disnea_esfuerzo','opt_disnea_siempre'],
+      'Seleccione Reposo, Esfuerzo o Siempre en Disnea'
+    );
+
+    ['a','b','c','d','e','f','g','h'].forEach(key => {
+      requireYNP3('yn3', key, 'Seleccione Sí o No en anomalía ' + key);
+    });
+
+    requireYNP3('yn', 'hernia', 'Seleccione Sí o No en Hay hernias');
+  }
+
+  if (p === 4) {
+
+    // Especifique es obligatorio solo cuando se selecciona "otro lugar".
+    if (getChoice('p4_lugar') === 'otro') {
+      const lugarOtro = document.getElementById('lugar_otro');
+      if (!lugarOtro || !String(lugarOtro.value || '').trim()) {
+        ok = false;
+        errs.push('Especifique otro lugar');
+        if (lugarOtro) lugarOtro.classList.add('err');
+      } else if (lugarOtro) {
+        lugarOtro.classList.remove('err');
+      }
+    }
+
     chkSig('med_p4', 'e_sig_med_p4', 'Firma del examinador médico — página 4');
     chkSig('ase_p4', 'e_sig_ase_p4', 'Firma del asegurado propuesto — página 4');
   }
 
   if (!ok) {
-    if (vl) vl.innerHTML = errs.map(e => `<li>${e}</li>`).join('');
+    if (vl) {
+      const unique = [...new Set(errs)].slice(0, 35);
+      const extra = errs.length > 35 ? `<li>...y ${errs.length - 35} campo(s) adicional(es).</li>` : '';
+      vl.innerHTML = unique.map(e => `<li>${e}</li>`).join('') + extra;
+    }
     if (vb) vb.classList.add('on');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  } else {
-    if (vb) vb.classList.remove('on');
+  } else if (vb) {
+    vb.classList.remove('on');
   }
 
   return ok;
@@ -643,6 +1086,29 @@ function validatePage(p) {
 
 const _yn={};
 const _choice={};
+
+function refreshCheckVisuals() {
+  document.querySelectorAll('.yn-si, .yn-no, .choice-opt').forEach(el => {
+    if (el.classList.contains('err') && !el.classList.contains('sel')) {
+      el.textContent = '';
+    } else {
+      el.textContent = '✓';
+    }
+  });
+}
+
+
+function updateP4LugarOtro() {
+  const el = document.getElementById('lugar_otro');
+  if (!el) return;
+  const isOtro = getChoice('p4_lugar') === 'otro';
+  el.disabled = !isOtro;
+  if (!isOtro) {
+    el.value = '';
+    el.classList.remove('err');
+  }
+}
+
 function setChoice(group,val){
   if(_choice[group]===val){
     _choice[group]='';
@@ -656,6 +1122,8 @@ function setChoice(group,val){
   document.querySelectorAll('[data-choice-group="'+group+'"]').forEach(el=>{
     el.classList.toggle('sel', _choice[group]===el.dataset.choiceValue);
   });
+  refreshCheckVisuals();
+  if(group==='p4_lugar') updateP4LugarOtro();
 }
 function getChoice(group){ return _choice[group]||''; }
 function setYN(prefix,key,val){
@@ -670,6 +1138,7 @@ function setYN(prefix,key,val){
   const si=document.getElementById(k+'_si'), no=document.getElementById(k+'_no');
   if(si){ si.classList.toggle('sel', cur==='Si'); }
   if(no){ no.classList.toggle('sel', cur==='No'); }
+  refreshCheckVisuals();
 }
 function getYN(name){ return _yn[name]||''; }
 function v(id){ const e=document.getElementById(id); return e?e.value.trim():''; }
@@ -806,6 +1275,7 @@ function generatePDF() {
     t(2,13,83.2,v('fechado_lugar'));
     t(2,71.9,83.2,v('fechado_dd')); t(2,80.4,83.2,v('fechado_mm')); t(2,89.0,83.2,v('fechado_aa'));
     sig(2,'sig_med_p2',3.8,87.5,45.6,6.4); sig(2,'sig_ase_p2',50.7,87.5,45.6,6.4);
+    t(2, 16.0, 97.15, 'ID médico: ' + v('med_unico_p2'), 7);
 
     // PAGE 3
     t(3,3.6,17.3,v('est_m')); t(3,13.9,17.3,v('est_cm'));
@@ -819,10 +1289,11 @@ function generatePDF() {
     ['det_hta','det_soplo','det_disnea','det_edema_mi','det_edema_gen',
      'det_p3_extra_1','det_p3_extra_2','det_p3_extra_3',
      'det3_a','det3_b','det3_c','det3_d','det3_e','det3_f','det3_g','det3_h',
-     'det_hernia_extra'
+
     ].forEach(id => tInput(3, id, 7));
 
     tInput(3, 'grado_edema', 7);
+    tInput(3, 'det_hernia_extra', 7, 62.20, 55.20);
 
     // Hernias: en pantalla el input quedó cerca de la última línea, pero en PDF debe ir
     // en el rectángulo gris de "Hay hernias", no sobre la línea h.
@@ -831,7 +1302,7 @@ function generatePDF() {
     // PAGE 4
     t(4,3.9,15.7,v('hora_exam'));
     t(4,25.35,15.7,v('exam_dd')); t(4,33.8,15.7,v('exam_mm')); t(4,42.4,15.7,v('exam_aa'));
-    t(4,65.7,20.0,v('lugar_otro'));
+    if(getChoice('p4_lugar') === 'otro') t(4,65.7,20.0,v('lugar_otro'));
     t(4,3.9,24.2,v('med_nom'));
     t(4,3.9,28.4,v('med_dir1')); t(4,3.9,31.0,v('med_dir2'));
     t(4,3.9,35.3,v('med_id'));
@@ -841,6 +1312,7 @@ function generatePDF() {
     drawSelectedChecks();
 
     sig(4,'sig_med_p4',3.6,87.5,45.8,6.5); sig(4,'sig_ase_p4',50.6,87.5,45.6,6.5);
+    t(4, 16.0, 97.15, 'ID médico: ' + v('med_unico_p4'), 7);
 
     const blob=doc.output('blob');
     const url=URL.createObjectURL(blob);
